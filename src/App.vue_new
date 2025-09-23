@@ -1,3 +1,24 @@
+<script setup>
+import { ref } from "vue";
+import NavigationMenu from "./components/NavigationMenu.vue";
+import UserCard from "./components/UserCard.vue";
+
+// Дані для пропсів (нова зміна)
+const userName = ref("Іван Петренко");
+const userPhoto = ref(
+  "https://cdn-icons-png.flaticon.com/512/3233/3233508.png"
+);
+const userName2 = ref("Марія Петренко");
+const userPhoto2 = ref(
+  "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png"
+);
+
+// Обробник події (нова зміна)
+const handleContactEvent = (name) => {
+  alert(`Зв’язок з ${name}!`); // Реакція на подію
+};
+</script>
+
 <template>
   <nav>
     <NavigationMenu />
@@ -5,43 +26,14 @@
     <router-link to="/about">About</router-link>
   </nav>
   <UserCard
-    :name="userName1"
-    :photo="userPhoto1"
-    :age="age1"
-    @contact="handleContactEvent"
-  />
-  <UserCard
     :name="userName2"
     :photo="userPhoto2"
-    :age="age2"
+    :age="25"
     @contact="handleContactEvent"
   />
+  <UserCard :name="userName" :photo="userPhoto" @contact="handleContactEvent" />
   <router-view />
 </template>
-
-<script setup>
-import { ref } from "vue";
-import NavigationMenu from "./components/NavigationMenu.vue";
-import UserCard from "./components/UserCard.vue";
-
-// данні для пропсів
-const userName1 = ref("Олексій Петренко");
-const userPhoto1 = ref(
-  "https://cdn-icons-png.flaticon.com/512/3233/3233508.png"
-);
-const age1 = ref(25);
-
-const userName2 = ref("Марія Петренко");
-const userPhoto2 = ref(
-  "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-female-9.png"
-);
-const age2 = ref(20);
-
-// обробка події
-const handleContactEvent = (name) => {
-  alert(`Зв'язок з ${name}`); // реакція на подію
-};
-</script>
 
 <style lang="scss">
 #app {
