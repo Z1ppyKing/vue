@@ -3,7 +3,10 @@
     <img :src="photo" alt="Фото профілю" class="user-photo" />
     <h2>{{ name }}</h2>
     <p>Вік: {{ age }} років</p>
+    <p>Улюблений колір: {{ favoriteColor }}</p>
     <button @click="handleContact">Зв'язатися</button>
+    <br /><br />
+    <button @click="handleColor">Показати улюблений колір</button>
   </div>
 </template>
 
@@ -25,14 +28,21 @@ const props = defineProps({
     type: Number,
     default: 18,
   },
+  favoriteColor: {
+    type: String,
+    default: "синій",
+  },
 });
 
-// оголошуємо подію
-const emit = defineEmits(["contact"]);
+// оголошуємо події
+const emit = defineEmits(["contact", "color"]);
 
-// функція для обробки кліку
+// функції для обробки кліків
 const handleContact = () => {
-  emit("contact", props.name); // випускаємо подію з ім'ям
+  emit("contact", props.name, props.age); // випускаємо подію з ім'ям та віком
+};
+const handleColor = () => {
+  emit("color", props.favoriteColor); // випускаємо подію з улюбленим коліром
 };
 </script>
 
