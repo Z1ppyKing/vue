@@ -1,52 +1,34 @@
 <template>
   <div class="blog-posts">
     <h2 class="blog-posts__title">Блог</h2>
-    <!-- Умовний рендерінг -->
-    <div v-if="posts.length === 0" class="blog-posts__loading">
-      Завантаження постів...
-    </div>
-    <div v-else class="blog-posts__list">
+    <div class="blog-posts__list">
       <!-- Цикл по постах -->
-      <div v-for="post in posts" :key="post.id" class="blog-posts__card">
+      <div
+        v-for="post in postsStore.posts"
+        :key="post.id"
+        class="blog-posts__card"
+      >
         <h3 class="blog-posts__card-title">{{ post.title }}</h3>
         <p class="blog-posts__card-content">{{ post.content }}</p>
+        <div class="blog-posts__button-group">
+          <button
+            class="blog-posts__button blog-posts__button--delete"
+            @click="postsStore.removePost(post.id)"
+          >
+            Видалити
+          </button>
+        </div>
       </div>
     </div>
+    <p>Загальна кількість постів: {{ postsStore.getPostsCount }}</p>
   </div>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+//import { ref } from "vue";
+import { usePostsStore } from "@/stores/store";
 
-const posts = ref([]);
-
-// Імітація данних постів
-const mockPosts = [
-  { id: 1, title: "Перший пост", content: "Це приклад першого поста." },
-  { id: 2, title: "Другий пост", content: "Це приклад другого поста" },
-  { id: 3, title: "Третій пост", content: "Це приклад третього поста" },
-];
-
-// Хук життєвого циклу: викликається після монтування компонента
-onMounted(() => {
-  console.log("Компонент BlogPosts змонтовано");
-  loadPosts();
-});
-
-// Імітація завантаження данних
-const loadPosts = () => {
-  console.log("Завантаження постів...");
-  // Імітація затримки, як при запиті до API
-  setTimeout(() => {
-    posts.value = mockPosts;
-    console.log("Пости завантажені!");
-  }, 5000);
-};
-
-// Хук життєвого циклу: викликається перед видаленням компонента
-onUnmounted(() => {
-  console.log("Компонент BlogPosts видалено!");
-});
+const postsStore = usePostsStore();
 </script>
 
 <style>
@@ -87,5 +69,29 @@ onUnmounted(() => {
 .blog-posts__card-content {
   font-size: 1rem;
   color: #4a5568;
+}
+.blog-posts__button-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.blog-posts__button {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.blog-posts__button--delete {
+  background: #e53e3e;
+  color: #fff;
+}
+.blog-posts__button--delete:hover {
+  background: #c53030;
 }
 </style>
