@@ -23,6 +23,17 @@
       />
     </div>
 
+    <!-- Поле для номеру телефону -->
+    <div class="contact-form__field">
+      <label class="contact-form__label">Номер телефону</label>
+      <input
+        v-model="phoneNumber"
+        type="text"
+        class="contact-form__input"
+        placeholder="Введіть номер телефону"
+      />
+    </div>
+
     <!-- Статус форми (реактивний текст) -->
     <p class="contact-form__status">{{ formStatus }}</p>
 
@@ -40,10 +51,11 @@ import { ref, computed } from "vue";
 // Реактивні змінні для полів форми
 const name = ref("");
 const email = ref("");
+const phoneNumber = ref("");
 
 // Метод для перевірки форми
 const validateForm = () => {
-  if (!name.value || !email.value) {
+  if (!name.value || !email.value || !phoneNumber.value) {
     alert("Будь ласка, заповніть усі поля!");
     return;
   }
@@ -51,21 +63,30 @@ const validateForm = () => {
     alert("Введіть коректну email-адресу!");
     return;
   }
+  if (!/^\+[1-9]\d{7,14}$/.test(phoneNumber.value)) {
+    alert("Введіть коректний номер телефону!");
+    return;
+  }
   alert("Форма успішно надіслана!");
 };
-// Метод очистки форми
+
+//Метод очистки форми
 const clearForm = () => {
   name.value = "";
   email.value = "";
+  phoneNumber.value = "";
 };
 
 // Обчислювальна властивість для статусу форми
 const formStatus = computed(() => {
-  if (!name.value || !email.value) {
+  if (!name.value || !email.value || !phoneNumber.value) {
     return "Заповніть усі поля";
   }
   if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value)) {
     return "Некоректний email";
+  }
+  if (!/^\+[1-9]\d{11}$/.test(phoneNumber.value)) {
+    return "Введіть коректний номер телефону!";
   }
   return "Форма готова для відправки";
 });
