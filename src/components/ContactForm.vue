@@ -22,15 +22,15 @@
         placeholder="Введіть ваш email"
       />
     </div>
-
-    <!-- Поле для номеру телефону -->
+    <!-- Поле для телефону -->
     <div class="contact-form__field">
-      <label class="contact-form__label">Номер телефону</label>
+      <label class="contact-form__label">Телефон</label>
       <input
-        v-model="phoneNumber"
-        type="text"
+        v-model="phone"
+        type="tel"
+        maxlength="13"
         class="contact-form__input"
-        placeholder="Введіть номер телефону"
+        placeholder="Введіть ваш телефон в форматі +380xxxxxxxxx"
       />
     </div>
 
@@ -51,11 +51,11 @@ import { ref, computed } from "vue";
 // Реактивні змінні для полів форми
 const name = ref("");
 const email = ref("");
-const phoneNumber = ref("");
+const phone = ref("");
 
 // Метод для перевірки форми
 const validateForm = () => {
-  if (!name.value || !email.value || !phoneNumber.value) {
+  if (!name.value || !email.value || !phone.value) {
     alert("Будь ласка, заповніть усі поля!");
     return;
   }
@@ -63,7 +63,7 @@ const validateForm = () => {
     alert("Введіть коректну email-адресу!");
     return;
   }
-  if (!/^\+[1-9]\d{7,14}$/.test(phoneNumber.value)) {
+  if (!/^\+380\d{9}$/.test(phone.value)) {
     alert("Введіть коректний номер телефону!");
     return;
   }
@@ -74,19 +74,19 @@ const validateForm = () => {
 const clearForm = () => {
   name.value = "";
   email.value = "";
-  phoneNumber.value = "";
+  phone.value = "";
 };
 
 // Обчислювальна властивість для статусу форми
 const formStatus = computed(() => {
-  if (!name.value || !email.value || !phoneNumber.value) {
+  if (!name.value || !email.value || !phone.value) {
     return "Заповніть усі поля";
   }
   if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value)) {
     return "Некоректний email";
   }
-  if (!/^\+[1-9]\d{11}$/.test(phoneNumber.value)) {
-    return "Введіть коректний номер телефону!";
+  if (!/^\+380\d{9}$/.test(phone.value)) {
+    return "Некоректний номер телефону!";
   }
   return "Форма готова для відправки";
 });

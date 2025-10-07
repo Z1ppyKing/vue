@@ -32,12 +32,4 @@ nav {
     }
   }
 }
-
-.usercards-row {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: stretch;
-  gap: 16px;
-}
 </style>

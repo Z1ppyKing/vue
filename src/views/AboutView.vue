@@ -6,6 +6,5 @@ import BlogPosts from "@/components/BlogPosts.vue";
   <div class="about">
     <h1>This is an about page</h1>
   </div>
-
   <BlogPosts />
 </template>

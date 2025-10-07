@@ -1,51 +1,34 @@
 <template>
   <div class="blog-posts">
     <h2 class="blog-posts__title">Блог</h2>
-    <!--Умовний рендерінг-->
-    <div v-if="posts.length === 0" class="blog-posts__loading">
-      Завантаження постів...
-    </div>
-    <div v-else class="blog-posts__list">
-      <div v-for="post in posts" :key="post.id" class="blog-posts__card">
+    <div class="blog-posts__list">
+      <!-- Цикл по постах -->
+      <div
+        v-for="post in postsStore.posts"
+        :key="post.id"
+        class="blog-posts__card"
+      >
         <h3 class="blog-posts__card-title">{{ post.title }}</h3>
         <p class="blog-posts__card-content">{{ post.content }}</p>
+        <div class="blog-posts__button-group">
+          <button
+            class="blog-posts__button blog-posts__button--delete"
+            @click="postsStore.removePost(post.id)"
+          >
+            Видалити
+          </button>
+        </div>
       </div>
     </div>
+    <p>Загальна кількість постів: {{ postsStore.getPostsCount }}</p>
   </div>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, onBeforeUnmount, ref } from "vue";
+//import { ref } from "vue";
+import { usePostsStore } from "@/stores/store";
 
-const posts = ref([]);
-
-const mockPosts = [
-  { id: 1, title: "Перший пост ", content: "Це приклад першого поста." },
-  { id: 2, title: "Другий пост ", content: "Це приклад лругого поста." },
-  { id: 3, title: "Третій пост ", content: "Це приклад третього поста." },
-];
-
-onMounted(() => {
-  console.log("Компонент BlogPosts змонтовано");
-  loadPosts();
-});
-
-const loadPosts = () => {
-  console.log("Завантаження постів...");
-  setTimeout(() => {
-    posts.value = mockPosts;
-    console.log("Пости завантажено!");
-  }, 1000);
-};
-
-onUnmounted(() => {
-  console.log("Компонент BlogPosts видалено!");
-});
-
-onBeforeUnmount( () => {
-   alert("Компонент BlogPosts буде видалено!"); 
-});
-
+const postsStore = usePostsStore();
 </script>
 
 <style>
