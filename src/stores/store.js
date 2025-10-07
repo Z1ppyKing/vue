@@ -14,5 +14,9 @@ export const usePostsStore = defineStore("posts", () => {
     posts.value = posts.value.filter((post) => post.id !== postId);
   };
 
-  return { posts, getPostsCount, removePost };
+  const removeAllPosts = () => {
+    posts.value.length = 0;
+  };
+
+  return { posts, getPostsCount, removePost, removeAllPosts };
 });

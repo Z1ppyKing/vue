@@ -21,6 +21,14 @@
       </div>
     </div>
     <p>Загальна кількість постів: {{ postsStore.getPostsCount }}</p>
+    <div class="blog-posts__button-group">
+      <button
+        class="blog-posts__button blog-posts__button--delete"
+        @click="postsStore.removeAllPosts()"
+      >
+        Видалити все
+      </button>
+    </div>
   </div>
 </template>
 
