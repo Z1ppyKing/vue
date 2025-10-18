@@ -1,6 +1,17 @@
 <template>
   <div class="blog-posts">
     <h2 class="blog-posts__title">Блог</h2>
+    <div class="blog_posts_filter">
+      <h3>Пошук</h3>
+      <input
+        type="text"
+        v-model="searchingTitle"
+        placeholder="Введіть назву поста"
+      />
+      <button class="blog-posts_button-group blog-posts__button" @click="searchByTitle">
+        Пошук
+      </button>
+    </div>
     <div class="blog-posts__list">
       <!-- Цикл по постах -->
       <div
@@ -17,26 +28,141 @@
           >
             Видалити
           </button>
+          <button
+            class="blog-posts__button blog-posts__button--edit"
+            @click="startEdit(post)"
+          >
+            Редагувати
+          </button>
+        </div>
+        <div
+          v-if="editingPostId === post.id"
+          class="blog-posts__edit-form-wrapper"
+        >
+          <h4>Редагувати пост</h4>
+          <form @submit.prevent="submitEdit(post.id)">
+            <div>
+              <label>Заголовок:</label>
+              <input
+                v-model="editTitle"
+                type="text"
+                placeholder="Введіть заголовок"
+              />
+            </div>
+            <div>
+              <label>Контент:</label>
+              <textarea
+                v-model="editContent"
+                placeholder="Введіть контент"
+              ></textarea>
+            </div>
+            <div class="blog-posts__button-group">
+              <button
+                type="submit"
+                class="blog-posts__button blog-posts_button--save"
+              >
+                Зберегти зміни
+              </button>
+              <button
+                type="button"
+                class="blog-posts__button blog-posts_button--cancel"
+                @click="cancelEdit"
+              >
+                Скасувати
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
-    <p>Загальна кількість постів: {{ postsStore.getPostsCount }}</p>
-    <div class="blog-posts__button-group">
-      <button
-        class="blog-posts__button blog-posts__button--delete"
-        @click="postsStore.removeAllPosts()"
-      >
-        Видалити все
-      </button>
+      <p>Загальна кількість постів: {{ postsStore.getPostsCount }}</p>
+      <div class="blog-posts__button-group">
+        <button
+          v-if="postsStore.getPostsCount !== 0"
+          class="blog-posts__button blog-posts__button--delete"
+          @click="postsStore.removeAllPosts()"
+        >
+          Видалити все
+        </button>
+      </div>
+      <h3>Додати новий пост</h3>
+      <form @submit.prevent="addNewPost">
+        <div>
+          <label>Заголовок:</label>
+          <input
+            v-model="newPostTitle"
+            type="text"
+            placeholder="Введіть заголовок"
+          />
+        </div>
+        <div>
+          <label>Контент:</label>
+          <textarea
+            v-model="newPostContent"
+            placeholder="Введіть контент"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="blog-posts__button blog-posts__button--add"
+        >
+          Додати пост
+        </button>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-//import { ref } from "vue";
+import { ref } from "vue";
 import { usePostsStore } from "@/stores/store";
 
+const searchingTitle = ref("");
+
 const postsStore = usePostsStore();
+const newPostTitle = ref("");
+const newPostContent = ref("");
+
+const editingPostId = ref(null);
+const editTitle = ref("");
+const editContent = ref("");
+
+const addNewPost = () => {
+  if (newPostTitle.value.trim() && newPostContent.value.trim()) {
+    postsStore.addPost({
+      id: Date.now(),
+      title: newPostTitle.value,
+      content: newPostContent.value,
+    });
+    newPostTitle.value = "";
+    newPostContent.value = "";
+  }
+};
+
+function startEdit(post) {
+  editingPostId.value = post.id;
+  editTitle.value = post.title;
+  editContent.value = post.content;
+}
+
+function submitEdit(postId) {
+  if (editTitle.value.trim() && editContent.value.trim()) {
+    postsStore.editPost(postId, {
+      title: editTitle.value,
+      content: editContent.value,
+    });
+    cancelEdit();
+  }
+}
+
+const cancelEdit = () => {
+  editingPostId.value = null;
+  editTitle.value = "";
+  editContent.value = "";
+};
+
+const searchByTitle = () => {
+  postsStore.searchPostsByTitle(searchingTitle.value);
+};  
 </script>
 
 <style>
@@ -101,5 +227,115 @@ const postsStore = usePostsStore();
 }
 .blog-posts__button--delete:hover {
   background: #c53030;
+}
+
+.blog-posts__button--add {
+  margin-bottom: 1rem;
+
+  padding: 0.5rem 1rem;
+
+  background: #38a169;
+
+  color: #fff;
+
+  border: none;
+
+  border-radius: 0.25rem;
+
+  cursor: pointer;
+
+  font-size: 1rem;
+}
+
+.blog-posts__button--add:hover {
+  background: #2f855a;
+}
+
+.blog-posts__button--edit {
+  background: #3182ce;
+
+  color: #fff;
+}
+
+.blog-posts__button--edit:hover {
+  background: #225ea8;
+}
+
+.blog-posts__button--save {
+  background: #38a169;
+
+  color: #fff;
+}
+
+.blog-posts__button--save:hover {
+  background: #2f855a;
+}
+
+.blog-posts__button--cancel {
+  background: #a0aec0;
+
+  color: #fff;
+}
+
+.blog-posts__button--cancel:hover {
+  background: #718096;
+}
+
+.blog-posts__edit-form-wrapper {
+  margin-top: 1rem;
+
+  background: #f7fafc;
+
+  padding: 1rem;
+
+  border-radius: 0.25rem;
+
+  border: 1px solid #e2e8f0;
+}
+form {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  width: 100%;
+
+  max-width: 600px;
+
+  margin: 0 auto;
+}
+
+form > div {
+  margin-bottom: 16px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  width: 100%;
+}
+
+input,
+textarea {
+  width: 100%;
+
+  max-width: 600px;
+
+  padding: 8px;
+
+  margin-top: 5px;
+
+  box-sizing: border-box;
+}
+
+label {
+  margin-bottom: 4px;
+
+  font-weight: 500;
+
+  align-self: flex-start;
 }
 </style>

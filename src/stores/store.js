@@ -17,6 +17,28 @@ export const usePostsStore = defineStore("posts", () => {
   const removeAllPosts = () => {
     posts.value.length = 0;
   };
+  
+  const addPost = (newPost) => {
+    posts.value.push({
+      id:posts.value.length + 1,
+      title: newPost.title,
+      content: newPost.content
+    });
+  };
 
-  return { posts, getPostsCount, removePost, removeAllPosts };
+  const editPost = (postId, updatedData) => {
+    const post = posts.value.find((p) => p.id === postId);
+    if (post) {
+      post.title = updatedData.title;
+      post.content = updatedData.content;
+    }
+  };
+  
+  const searchPostsByTitle = (title) => {
+    posts.value = posts.value.filter((post) =>
+      post.title.toLowerCase().includes(title.toLowerCase())
+    );
+  } 
+    
+  return { posts, getPostsCount, removePost, removeAllPosts, addPost, editPost, searchPostsByTitle };
 });
