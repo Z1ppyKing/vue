@@ -1,14 +1,17 @@
 <template>
   <div class="blog-posts">
     <h2 class="blog-posts__title">Блог</h2>
-    <div class="blog_posts_filter">
+    <div class="blog_posts__search">
       <h3>Пошук</h3>
       <input
         type="text"
         v-model="searchingTitle"
         placeholder="Введіть назву поста"
       />
-      <button class="blog-posts_button-group blog-posts__button" @click="searchByTitle">
+      <button
+        class="blog-posts_button-group blog-posts__button"
+        @click="searchByTitle"
+      >
         Пошук
       </button>
     </div>
@@ -19,7 +22,9 @@
         :key="post.id"
         class="blog-posts__card"
       >
-        <h3 class="blog-posts__card-title">{{ post.title }}</h3>
+        <h3 class="blog-posts__card-title">
+        <router-link :to="`/post/${post.id}`"> {{ post.title }} </router-link>    
+        </h3>
         <p class="blog-posts__card-content">{{ post.content }}</p>
         <div class="blog-posts__button-group">
           <button
@@ -162,7 +167,7 @@ const cancelEdit = () => {
 
 const searchByTitle = () => {
   postsStore.searchPostsByTitle(searchingTitle.value);
-};  
+};
 </script>
 
 <style>
